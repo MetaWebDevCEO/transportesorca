@@ -10,13 +10,17 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
     let cancelled = false;
 
     (async () => {
-      const LocomotiveScroll = (await import("locomotive-scroll")).default;
+      const LocomotiveScroll = (await import("locomotive-scroll"))
+        .default as unknown as new (options: unknown) => {
+        destroy?: () => void;
+        update?: () => void;
+      };
       if (cancelled || !containerRef.current) return;
 
       scroll = new LocomotiveScroll({
         el: containerRef.current,
         smooth: true,
-      });
+      } as unknown);
 
       window.setTimeout(() => {
         scroll?.update?.();
